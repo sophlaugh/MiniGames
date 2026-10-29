@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CatAdventure 🐱</title>
+<title>Boris &amp; Natasha 🐱</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
@@ -74,8 +74,8 @@ canvas {
   <canvas id="game"></canvas>
   <div id="ui-overlay">
     <div class="hud-left">
-      <div class="hud-item" id="hud-city">🏘️ Quartier Calme</div>
-      <div class="hud-item" id="hud-level">⭐ Niv.1</div>
+      <div class="hud-item" id="hud-city">🏘️ Quiet Neighborhood</div>
+      <div class="hud-item" id="hud-level">⭐ Level 1</div>
       <div class="xp-bar-outer"><div class="xp-bar-inner" id="xp-bar" style="width:0%"></div></div>
     </div>
     <div class="hud-right">
@@ -84,10 +84,10 @@ canvas {
     </div>
   </div>
   <div id="message-popup" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.85);color:#fff;padding:16px 28px;border-radius:14px;font-size:17px;text-align:center;border:2px solid #ffd700;z-index:100;pointer-events:none;font-family:'Segoe UI',sans-serif;"></div>
-  <div id="pause-screen" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.7);z-index:200;flex-direction:column;justify-content:center;align-items:center;color:#fff;font-size:42px;font-weight:bold;font-family:'Segoe UI',sans-serif;text-shadow:0 0 20px rgba(255,215,0,0.5);">⏸️ PAUSE<div style="font-size:18px;font-weight:normal;margin-top:14px;color:#ddd;text-shadow:none;">P / Échap : reprendre · R : recommencer · M : menu</div></div>
+  <div id="pause-screen" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.7);z-index:200;flex-direction:column;justify-content:center;align-items:center;color:#fff;font-size:42px;font-weight:bold;font-family:'Segoe UI',sans-serif;text-shadow:0 0 20px rgba(255,215,0,0.5);">⏸️ PAUSE<div style="font-size:18px;font-weight:normal;margin-top:14px;color:#ddd;text-shadow:none;">P / Esc: resume · R: restart · M: menu</div></div>
   <div id="score-form" style="display:none;position:absolute;bottom:80px;left:50%;transform:translateX(-50%);z-index:300;text-align:center;font-family:'Segoe UI',sans-serif;">
-    <input id="score-name" type="text" maxlength="12" placeholder="Ton nom" style="padding:8px 14px;font-size:16px;border-radius:8px;border:2px solid #ffd700;background:#1a1a2e;color:#fff;text-align:center;width:180px;">
-    <button id="score-save-btn" style="margin-left:8px;padding:8px 18px;font-size:16px;border-radius:8px;border:none;background:#ffd700;color:#000;font-weight:bold;cursor:pointer;">💾 Sauver</button>
+    <input id="score-name" type="text" maxlength="12" placeholder="Your name" style="padding:8px 14px;font-size:16px;border-radius:8px;border:2px solid #ffd700;background:#1a1a2e;color:#fff;text-align:center;width:180px;">
+    <button id="score-save-btn" style="margin-left:8px;padding:8px 18px;font-size:16px;border-radius:8px;border:none;background:#ffd700;color:#000;font-weight:bold;cursor:pointer;">💾 Save</button>
     <div id="score-list" style="margin-top:8px;color:#ffd700;font-size:13px;text-shadow:1px 1px 2px #000;"></div>
   </div>
   <div class="touch-controls">
@@ -167,11 +167,11 @@ canvas.addEventListener('touchstart', (e) => {
 // C3 — Score save button
 document.getElementById('score-save-btn').addEventListener('click', () => {
   if (scoreSaved) return;
-  const name = document.getElementById('score-name').value.trim() || 'Anonyme';
+  const name = document.getElementById('score-name').value.trim() || 'Anonymous';
   saveScore(name, score);
   scoreSaved = true;
   document.getElementById('score-name').disabled = true;
-  document.getElementById('score-save-btn').textContent = '✅ Sauvé !';
+  document.getElementById('score-save-btn').textContent = '✅ Saved!';
   updateScoreList();
 });
 function updateScoreList() {
@@ -240,7 +240,7 @@ function sfxGameOver() { initAudio(); playSound(200, 'triangle', 0.5, 0.12, -150
 function loadScores() { try { return JSON.parse(localStorage.getItem('catadv_scores') || '[]'); } catch(e) { return []; } }
 function saveScore(name, score) {
   const list = loadScores();
-  list.push({ name: (name || 'Anonyme').slice(0, 12), score, date: Date.now() });
+  list.push({ name: (name || 'Anonymous').slice(0, 12), score, date: Date.now() });
   list.sort((a, b) => b.score - a.score);
   localStorage.setItem('catadv_scores', JSON.stringify(list.slice(0, 10)));
 }
@@ -252,7 +252,7 @@ let score = 0;
 let highScore = 0;
 try { highScore = parseInt(localStorage.getItem('catadv_highscore') || '0') || 0; } catch (e) {}
 let difficulty = 1;
-let cityName = 'Quartier Calme';
+let cityName = 'Quiet Neighborhood';
 let cityIndex = 0;
 let levelUpTimer = 0;
 let tutorialTimer = 180; // 3 second tutorial at start
@@ -267,9 +267,9 @@ let worldWidth = 5000; // prochain point d'arrivée de niveau (avance à chaque 
 let jumpBuffer = 0;    // un appui sur saut reste valable quelques pas (saut juste avant d'atterrir)
 
 const CITY_NAMES = [
-  'Quartier Calme', 'Petite Bourgade', 'Centre-Ville',
-  'Faubourg Animé', 'Ville Portuaire', 'Zone Industrielle',
-  'Grande Métropole', 'Cité Mythique'
+  'Quiet Neighborhood', 'Small Town', 'Downtown',
+  'Lively Suburbs', 'Harbor Town', 'Industrial District',
+  'Big City', 'Legendary City'
 ];
 
 // --- PARTICLES ---
@@ -687,7 +687,7 @@ function drawDogcatcher(x, y, frame) {
   // Label
   ctx.fillStyle = '#FFF';
   ctx.font = '6px sans-serif';
-  ctx.fillText('FOURRIÈRE', -12, -18);
+  ctx.fillText('ANIMAL CONTROL', -12, -18);
 
   // ⚠️ indicator
   ctx.fillStyle = '#FF4444';
@@ -1596,12 +1596,12 @@ function updateCollisions() {
             spawnParticles(player.x + player.width / 2, player.y, 12, '#FF8800', 5, 25);
             player.vx = (player.x > npc.x ? 1 : -1) * 6;
             player.vy = -6;
-            showMessage('⚠️ Fourrière ! Esquive en sautant !', 2000);
+            showMessage('⚠️ Animal control! Jump to dodge!', 2000);
           } else {
             // Level 3+: fatal capture
             state = 'GAMEOVER';
             sfxGameOver();
-            gameOverReason = 'Capturé par la fourrière !';
+            gameOverReason = 'Caught by animal control!';
             screenShake = 15;
             spawnParticles(player.x + player.width / 2, player.y, 20, '#FF0000', 8, 30);
             if (score > highScore) {
@@ -1612,7 +1612,7 @@ function updateCollisions() {
               document.getElementById('score-form').style.display = 'block';
               document.getElementById('score-name').disabled = false;
               document.getElementById('score-name').value = '';
-              document.getElementById('score-save-btn').textContent = '💾 Sauver';
+              document.getElementById('score-save-btn').textContent = '💾 Save';
               updateScoreList();
             }
           }
@@ -1695,7 +1695,7 @@ function updateCamera() {
 
 function updateHUD() {
   hudCity.textContent = '🏘️ ' + cityName;
-  hudLevel.textContent = '⭐ Niv.' + player.level;
+  hudLevel.textContent = '⭐ Level ' + player.level;
   hudHearts.textContent = '❤️'.repeat(Math.max(0, player.health)) + '🖤'.repeat(Math.max(0, player.maxHealth - player.health));
   hudScore.textContent = '🐟 ' + score;
   xpBar.style.width = ((player.xp / player.xpToNext) * 100) + '%';
@@ -1719,9 +1719,9 @@ function update() {
 
   // Sewer transition messages
   if (player.inSewer && !wasInSewer) {
-    showMessage('🐱 Dans les égouts...');
+    showMessage('🐱 Down in the sewers...');
   } else if (!player.inSewer && wasInSewer) {
-    showMessage('☀️ De retour à la surface !');
+    showMessage('☀️ Back above ground!');
   }
 
   if (screenShake > 0) screenShake *= 0.85;
@@ -1731,7 +1731,7 @@ function update() {
   // Arrivée de niveau : déclenchée une seule fois par point d'arrivée, qui est ensuite repoussé
   // (auparavant +50 XP à chaque image une fois la ligne franchie → montée de niveau infinie)
   if (player.x >= worldWidth - 60) {
-    showMessage('🏁 Niveau terminé ! +50 XP', 2500);
+    showMessage('🏁 Level complete! +50 XP', 2500);
     player.xp = Math.max(player.xp + 50, player.xpToNext); // garantit une montée de niveau
     worldWidth += 5000 + player.level * 1000;
   }
@@ -1739,12 +1739,12 @@ function update() {
   if (player.health <= 0) {
     state = 'GAMEOVER';
     sfxGameOver();
-    gameOverReason = 'Le chat a succombé à ses blessures...';
+    gameOverReason = 'Boris ran out of hearts...';
     if (!scoreSaved) {
       document.getElementById('score-form').style.display = 'block';
       document.getElementById('score-name').disabled = false;
       document.getElementById('score-name').value = '';
-      document.getElementById('score-save-btn').textContent = '💾 Sauver';
+      document.getElementById('score-save-btn').textContent = '💾 Save';
       updateScoreList();
     }
     if (score > highScore) {
@@ -2014,14 +2014,14 @@ function render() {
     ctx.fillStyle = `rgba(255,215,0,${alpha})`;
     ctx.font = 'bold 36px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('🎉 NIVEAU ' + player.level + ' ! 🎉', canvas.width / 2, canvas.height / 2 - 20);
+    ctx.fillText('🎉 LEVEL ' + player.level + ' ! 🎉', canvas.width / 2, canvas.height / 2 - 20);
     ctx.fillStyle = `rgba(255,255,255,${alpha})`;
     ctx.font = '18px sans-serif';
-    ctx.fillText('Nouvelles capacités débloquées !', canvas.width / 2, canvas.height / 2 + 25);
+    ctx.fillText('New abilities unlocked!', canvas.width / 2, canvas.height / 2 + 25);
     if (player.level === 3) {
       ctx.fillText('🐾 Double saut ! (appuie à nouveau en l\'air)', canvas.width / 2, canvas.height / 2 + 50);
     } else if (player.level === 6) {
-      ctx.fillText('🐾 Triple saut !', canvas.width / 2, canvas.height / 2 + 50);
+      ctx.fillText('🐾 Triple jump!', canvas.width / 2, canvas.height / 2 + 50);
     }
     ctx.textAlign = 'start';
   }
@@ -2038,9 +2038,9 @@ function render() {
     ctx.fillStyle = `rgba(255,255,255,${alpha})`;
     ctx.font = 'bold 14px sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('🎮 Flèches ← → : Bouger | Espace : Sauter', canvas.width / 2, ty + 24);
-    ctx.fillText('⬇️ Flèche bas sur une bouche d\'égout : Égouts', canvas.width / 2, ty + 48);
-    ctx.fillText('🧓 Les aînés te caressent | ⚠️ Enfants agités & Fourrière !', canvas.width / 2, ty + 72);
+    ctx.fillText('🎮 Arrow keys ← →: Move | Space: Jump', canvas.width / 2, ty + 24);
+    ctx.fillText('⬇️ Down arrow at a manhole: Enter sewers', canvas.width / 2, ty + 48);
+    ctx.fillText('🧓 Friendly neighbors help | ⚠️ Avoid trouble!', canvas.width / 2, ty + 72);
     ctx.textAlign = 'start';
   }
 
@@ -2057,10 +2057,10 @@ function render() {
     ctx.fillText(gameOverReason, canvas.width / 2, canvas.height / 2 - 15);
     ctx.fillStyle = '#FFF';
     ctx.font = '18px sans-serif';
-    ctx.fillText('Score : ' + score + ' | 🐟 ' + fishesCollected + ' | Caresses : ' + petsReceived + ' | Niv. ' + player.level, canvas.width / 2, canvas.height / 2 + 25);
+    ctx.fillText('Score: ' + score + ' | 🐟 ' + fishesCollected + ' | Pets: ' + petsReceived + ' | Level ' + player.level, canvas.width / 2, canvas.height / 2 + 25);
     ctx.fillStyle = '#FFD700';
     ctx.font = '16px sans-serif';
-    ctx.fillText('Appuie sur ENTRÉE pour rejouer', canvas.width / 2, canvas.height / 2 + 60);
+    ctx.fillText('Press ENTER to play again', canvas.width / 2, canvas.height / 2 + 60);
     ctx.textAlign = 'start';
   }
 
@@ -2125,20 +2125,20 @@ function drawTitleScreen() {
   ctx.fillStyle = titleGrad;
   ctx.font = 'bold 56px "Segoe UI", sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('CatAdventure', canvas.width / 2, 130);
+  ctx.fillText('Boris & Natasha', canvas.width / 2, 130);
 
   // Subtitle
   ctx.fillStyle = '#E0E0E0';
   ctx.font = 'italic 18px sans-serif';
-  ctx.fillText('🐱 L\'aventure féline dans la ville 🏙️', canvas.width / 2, 170);
+  ctx.fillText('🐱 A city adventure for two cats 🏙️', canvas.width / 2, 170);
 
   // Instructions
   const instructions = [
-    { text: '🎮 Flèches ← → : Se déplacer', y: 214 },
-    { text: '⬆️ Espace / Flèche haut : Sauter', y: 238 },
-    { text: '⬇️ Flèche bas : Entrer dans les égouts', y: 262 },
-    { text: '🧓 Les personnes âgées te caressent (+❤️)', y: 286 },
-    { text: '⚠️ Attention aux enfants agressifs et à la fourrière !', y: 310 },
+    { text: '🎮 Left / Right arrows: Move', y: 214 },
+    { text: '⬆️ Space / Up arrow: Jump', y: 238 },
+    { text: '⬇️ Down arrow: Enter sewers', y: 262 },
+    { text: '🧓 Friendly neighbors give hearts (+❤️)', y: 286 },
+    { text: '⚠️ Watch out for obstacles and animal control!', y: 310 },
   ];
 
   // Panneau sombre derrière les consignes : lisibles même devant les fenêtres éclairées
@@ -2156,19 +2156,19 @@ function drawTitleScreen() {
   const pulse = Math.sin(titlePulse * 2) * 0.3 + 0.7;
   ctx.fillStyle = `rgba(255,215,0,${pulse})`;
   ctx.font = 'bold 22px sans-serif';
-  ctx.fillText('✨ Appuie sur ENTRÉE pour commencer ! ✨', canvas.width / 2, 440);
+  ctx.fillText('✨ Press ENTER to start! ✨', canvas.width / 2, 440);
 
   // High score
   if (highScore > 0) {
     ctx.fillStyle = '#AAA';
     ctx.font = '14px sans-serif';
-    ctx.fillText('🏆 Meilleur score : ' + highScore, canvas.width / 2, 470);
+    ctx.fillText('🏆 High score: ' + highScore, canvas.width / 2, 470);
   }
 
   // Controls hint
   ctx.fillStyle = '#888';
   ctx.font = '12px sans-serif';
-  ctx.fillText('Pendant le jeu : P / Échap pause | R recommencer | M menu (depuis la pause)', canvas.width / 2, 500);
+  ctx.fillText('During play: P / Esc pause | R restart | M menu (when paused)', canvas.width / 2, 500);
 
   ctx.textAlign = 'start';
 }
@@ -2353,22 +2353,22 @@ fitScreen();
 
 <div id="update-toast">
   <span class="toast-close">&times;</span>
-  <div class="toast-title">🔄 Mise à jour disponible</div>
+  <div class="toast-title">🔄 Update available</div>
   <span id="toast-version"></span>
 </div>
 
 <div id="update-modal-overlay">
   <div id="update-modal">
-    <h3>🔄 Mise à jour disponible</h3>
+    <h3>🔄 Update available</h3>
     <div class="modal-version" id="modal-version-text"></div>
     <div class="changelog-body" id="modal-changelog"></div>
     <div class="modal-actions">
-      <button class="btn-update">Mettre à jour maintenant</button>
-      <button class="btn-later">Plus tard</button>
+      <button class="btn-update">Update now</button>
+      <button class="btn-later">Later</button>
     </div>
     <label class="auto-label">
       <input type="checkbox" id="auto-update-cb">
-      Mises à jour automatiques
+      Automatic updates
     </label>
     <div class="update-cmd" id="update-cmd-block" style="display:none"></div>
   </div>
@@ -2550,7 +2550,7 @@ fitScreen();
   function triggerUpdate() {
     var cmdBlock = document.getElementById('update-cmd-block');
     cmdBlock.style.display = 'block';
-    cmdBlock.textContent = 'Exécutez sur le serveur : cd /opt/catadventure && bash update.sh';
+    cmdBlock.textContent = 'Run on the server: cd /opt/catadventure && bash update.sh';
     // If an auto-update mechanism is in place, the update will be picked up.
     // Poll for new version after a delay.
     setTimeout(function() {
